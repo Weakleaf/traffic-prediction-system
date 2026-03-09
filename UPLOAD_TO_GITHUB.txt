@@ -1,0 +1,250 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║              📤 HOW TO UPLOAD TO GITHUB & VIEW IN BROWSER 📤                 ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     STEP 1: CREATE GITHUB ACCOUNT                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+1. Go to: https://github.com
+2. Click "Sign up"
+3. Enter your email, password, username
+4. Verify your email
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     STEP 2: CREATE NEW REPOSITORY                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+1. Click the "+" icon (top right)
+2. Select "New repository"
+3. Fill in:
+   
+   Repository name: traffic-prediction-system
+   
+   Description: Traffic Congestion Prediction using CNN-LSTM - CYBER TITANS
+   
+   ✅ Public (so it can be viewed online)
+   
+   ✅ Add a README file
+   
+4. Click "Create repository"
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     STEP 3: UPLOAD YOUR FILES                                │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+METHOD 1: Web Upload (Easiest - No Git Required)
+────────────────────────────────────────────────────────────────────────────────
+
+1. In your repository, click "Add file" → "Upload files"
+
+2. Drag and drop these files:
+   ✓ index.html
+   ✓ dashboard.html
+   ✓ main.py
+   ✓ api.py
+   ✓ model.py
+   ✓ config.py
+   ✓ database.py
+   ✓ data_generator.py
+   ✓ quick_start.py
+   ✓ test_system.py
+   ✓ requirements.txt
+   ✓ README.md
+   ✓ GETTING_STARTED.md
+   ✓ PROJECT_SUMMARY.md
+   ✓ .gitignore
+
+3. Add commit message: "Initial commit - Traffic Prediction System"
+
+4. Click "Commit changes"
+
+5. Create folders:
+   - Click "Add file" → "Create new file"
+   - Type: data/.gitkeep
+   - Commit
+   - Repeat for: models/.gitkeep, logs/.gitkeep, plots/.gitkeep
+
+
+METHOD 2: Using Git (Advanced)
+────────────────────────────────────────────────────────────────────────────────
+
+Open PowerShell in your project folder and run:
+
+    # Initialize git
+    git init
+
+    # Add all files
+    git add .
+
+    # Commit
+    git commit -m "Initial commit"
+
+    # Connect to GitHub (replace YOUR_USERNAME)
+    git remote add origin https://github.com/YOUR_USERNAME/traffic-prediction-system.git
+
+    # Push
+    git branch -M main
+    git push -u origin main
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     STEP 4: ENABLE GITHUB PAGES                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+1. Go to your repository on GitHub
+
+2. Click "Settings" tab (top menu)
+
+3. Scroll down and click "Pages" (left sidebar)
+
+4. Under "Source":
+   - Branch: main
+   - Folder: / (root)
+
+5. Click "Save"
+
+6. Wait 1-2 minutes
+
+7. Your site will be live at:
+   https://YOUR_USERNAME.github.io/traffic-prediction-system/
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     STEP 5: VIEW IN BROWSER                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+Once GitHub Pages is enabled, visit:
+
+Main Page:
+    https://YOUR_USERNAME.github.io/traffic-prediction-system/
+
+Dashboard:
+    https://YOUR_USERNAME.github.io/traffic-prediction-system/dashboard.html
+
+Repository:
+    https://github.com/YOUR_USERNAME/traffic-prediction-system
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     IMPORTANT NOTES                                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+✅ WILL WORK on GitHub Pages:
+   • Main landing page (index.html)
+   • Dashboard UI (dashboard.html)
+   • All documentation
+   • Static content
+
+❌ WON'T WORK on GitHub Pages:
+   • Real-time predictions (needs Python backend)
+   • API calls (needs server)
+   • Database operations
+   • Model training
+
+Why? GitHub Pages only hosts static HTML/CSS/JS files, not Python code.
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     TO MAKE API WORK ONLINE                                  │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+You need to deploy the Python backend separately:
+
+Option 1: PythonAnywhere (Free, Easy)
+────────────────────────────────────────────────────────────────────────────────
+1. Sign up: https://www.pythonanywhere.com
+2. Upload Python files
+3. Set up Flask app
+4. Get API URL: https://YOUR_USERNAME.pythonanywhere.com
+
+Option 2: Render (Free)
+────────────────────────────────────────────────────────────────────────────────
+1. Sign up: https://render.com
+2. Connect GitHub repo
+3. Create Web Service
+4. Deploy automatically
+
+Option 3: Heroku (Free tier)
+────────────────────────────────────────────────────────────────────────────────
+1. Sign up: https://heroku.com
+2. Install Heroku CLI
+3. Deploy with Git
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     EXAMPLE URLS                                             │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+Replace YOUR_USERNAME with your actual GitHub username:
+
+Repository:
+    https://github.com/YOUR_USERNAME/traffic-prediction-system
+
+Live Site:
+    https://YOUR_USERNAME.github.io/traffic-prediction-system/
+
+Dashboard:
+    https://YOUR_USERNAME.github.io/traffic-prediction-system/dashboard.html
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     QUICK CHECKLIST                                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+□ Created GitHub account
+□ Created new repository
+□ Uploaded all files
+□ Enabled GitHub Pages
+□ Waited 2-5 minutes
+□ Visited the live URL
+□ Shared the link!
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     TROUBLESHOOTING                                          │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+Problem: Page shows 404
+Solution: Wait 5-10 minutes, GitHub Pages takes time to build
+
+Problem: Dashboard shows errors
+Solution: Normal! API needs separate deployment (see above)
+
+Problem: Files not uploading
+Solution: Make sure files are < 100MB each
+
+Problem: Can't find Settings
+Solution: Make sure you're in YOUR repository, not someone else's
+
+
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                     NEED HELP?                                               │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+Read the detailed guide:
+    GITHUB_SETUP.md
+
+GitHub Docs:
+    https://docs.github.com/pages
+
+Video Tutorial:
+    Search YouTube: "How to use GitHub Pages"
+
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                                                              ║
+║                    🎉 YOU'RE READY TO UPLOAD! 🎉                             ║
+║                                                                              ║
+║                Follow the steps above and you'll be live                     ║
+║                    in less than 10 minutes!                                  ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
+© 2026 CYBER TITANS - Kisii University
