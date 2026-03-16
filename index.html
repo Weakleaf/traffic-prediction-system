@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +7,10 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;600&display=swap');
 
-        :root {
+        /* ── DARK THEME (default) ── */
+        :root, [data-theme="dark"] {
             --green: #00ff88;
             --green-dim: #00cc6a;
-            --green-dark: #003322;
             --bg: #050d0a;
             --bg2: #0a1a12;
             --bg3: #0f2318;
@@ -18,6 +18,29 @@
             --text-dim: #5a8a6a;
             --border: rgba(0,255,136,0.15);
             --glow: 0 0 20px rgba(0,255,136,0.3);
+            --grid-line: rgba(0,255,136,0.03);
+            --scanline-color: rgba(0,255,136,0.06);
+            --code-bg: #000;
+            --hero-gradient: linear-gradient(135deg, #fff 0%, #00ff88 60%, #00ffcc 100%);
+            --nav-bg: rgba(5,13,10,0.95);
+        }
+
+        /* ── LIGHT THEME ── */
+        [data-theme="light"] {
+            --green: #00995a;
+            --green-dim: #007a47;
+            --bg: #f0faf5;
+            --bg2: #ffffff;
+            --bg3: #e6f7ef;
+            --text: #0d2b1a;
+            --text-dim: #4a7a5e;
+            --border: rgba(0,153,90,0.2);
+            --glow: 0 0 16px rgba(0,153,90,0.2);
+            --grid-line: rgba(0,153,90,0.05);
+            --scanline-color: transparent;
+            --code-bg: #1a2e24;
+            --hero-gradient: linear-gradient(135deg, #0d2b1a 0%, #00995a 60%, #00cc77 100%);
+            --nav-bg: rgba(240,250,245,0.95);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -28,28 +51,34 @@
             color: var(--text);
             min-height: 100vh;
             overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
         }
 
-        /* Animated grid background */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
             background-image:
-                linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
         }
 
-        .noise {
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100vh); }
+        }
+
+        .scanline {
             position: fixed;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(transparent, var(--scanline-color), transparent);
+            animation: scan 8s linear infinite;
             pointer-events: none;
-            z-index: 0;
-            opacity: 0.4;
+            z-index: 999;
         }
 
         .wrap { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
@@ -62,6 +91,7 @@
             padding: 24px 0;
             border-bottom: 1px solid var(--border);
             margin-bottom: 80px;
+            transition: border-color 0.3s;
         }
 
         .logo {
@@ -73,6 +103,8 @@
             text-shadow: var(--glow);
         }
 
+        .nav-right { display: flex; align-items: center; gap: 32px; }
+
         .nav-links { display: flex; gap: 32px; }
         .nav-links a {
             font-family: 'Share Tech Mono', monospace;
@@ -83,6 +115,50 @@
             transition: color 0.2s;
         }
         .nav-links a:hover { color: var(--green); }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            padding: 6px 14px;
+            border-radius: 20px;
+            transition: all 0.2s;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.72em;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        .toggle-track {
+            width: 32px; height: 16px;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .toggle-thumb {
+            width: 10px; height: 10px;
+            background: var(--green);
+            border-radius: 50%;
+            position: absolute;
+            top: 2px; left: 2px;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 0 6px var(--green);
+        }
+
+        [data-theme="light"] .toggle-thumb { transform: translateX(16px); }
 
         /* ── HERO ── */
         .hero { text-align: center; margin-bottom: 100px; }
@@ -98,7 +174,10 @@
             border-radius: 2px;
             margin-bottom: 32px;
             background: rgba(0,255,136,0.05);
+            transition: border-color 0.3s;
         }
+
+        [data-theme="light"] .hero-tag { background: rgba(0,153,90,0.07); }
 
         .hero h1 {
             font-family: 'Orbitron', monospace;
@@ -106,7 +185,7 @@
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 24px;
-            background: linear-gradient(135deg, #fff 0%, var(--green) 60%, #00ffcc 100%);
+            background: var(--hero-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -138,8 +217,8 @@
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
         }
         .btn-primary:hover {
-            background: #fff;
-            box-shadow: 0 0 30px rgba(0,255,136,0.5);
+            filter: brightness(1.15);
+            box-shadow: 0 0 30px rgba(0,255,136,0.4);
             transform: translateY(-2px);
         }
 
@@ -171,12 +250,14 @@
             background: var(--border);
             border: 1px solid var(--border);
             margin-bottom: 100px;
+            transition: border-color 0.3s;
         }
 
         .stat-cell {
             background: var(--bg2);
             padding: 32px 24px;
             text-align: center;
+            transition: background 0.3s;
         }
 
         .stat-cell .num {
@@ -211,7 +292,8 @@
             font-size: 1.8em;
             font-weight: 700;
             margin-bottom: 48px;
-            color: #fff;
+            color: var(--text);
+            transition: color 0.3s;
         }
 
         /* ── FEATURES ── */
@@ -223,6 +305,7 @@
             gap: 1px;
             background: var(--border);
             border: 1px solid var(--border);
+            transition: border-color 0.3s;
         }
 
         .feature-cell {
@@ -245,11 +328,7 @@
         .feature-cell:hover { background: var(--bg3); }
         .feature-cell:hover::before { height: 100%; }
 
-        .feature-icon {
-            font-size: 2em;
-            margin-bottom: 16px;
-            display: block;
-        }
+        .feature-icon { font-size: 2em; margin-bottom: 16px; display: block; }
 
         .feature-cell h3 {
             font-family: 'Orbitron', monospace;
@@ -260,11 +339,7 @@
             margin-bottom: 12px;
         }
 
-        .feature-cell p {
-            font-size: 0.9em;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
+        .feature-cell p { font-size: 0.9em; color: var(--text-dim); line-height: 1.6; }
 
         /* ── ARCHITECTURE ── */
         .arch { margin-bottom: 100px; }
@@ -274,14 +349,10 @@
             background: var(--bg2);
             padding: 48px;
             font-family: 'Share Tech Mono', monospace;
+            transition: background 0.3s, border-color 0.3s;
         }
 
-        .arch-layer {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 8px;
-        }
+        .arch-layer { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
 
         .arch-box {
             flex: 1;
@@ -292,21 +363,12 @@
             color: var(--text);
             letter-spacing: 1px;
             text-align: center;
-            transition: border-color 0.2s, color 0.2s;
+            transition: border-color 0.2s, color 0.2s, background 0.3s;
         }
 
-        .arch-box:hover {
-            border-color: var(--green);
-            color: var(--green);
-        }
+        .arch-box:hover { border-color: var(--green); color: var(--green); }
 
-        .arch-arrow {
-            color: var(--green);
-            font-size: 1.2em;
-            text-align: center;
-            padding: 4px 0;
-            opacity: 0.5;
-        }
+        .arch-arrow { color: var(--green); font-size: 1.2em; text-align: center; padding: 4px 0; opacity: 0.5; }
 
         .arch-tag {
             width: 120px;
@@ -321,7 +383,7 @@
         .code-section { margin-bottom: 100px; }
 
         .code-block {
-            background: #000;
+            background: var(--code-bg);
             border: 1px solid var(--border);
             padding: 32px;
             font-family: 'Share Tech Mono', monospace;
@@ -329,6 +391,7 @@
             line-height: 2;
             overflow-x: auto;
             position: relative;
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .code-block::before {
@@ -342,6 +405,7 @@
 
         .code-block .prompt { color: var(--green); }
         .code-block .cmd { color: #fff; }
+        [data-theme="light"] .code-block .cmd { color: #c8ffe0; }
         .code-block .comment { color: var(--text-dim); }
 
         /* ── TEAM ── */
@@ -353,6 +417,7 @@
             gap: 1px;
             background: var(--border);
             border: 1px solid var(--border);
+            transition: border-color 0.3s;
         }
 
         .team-card {
@@ -360,7 +425,6 @@
             padding: 28px 20px;
             text-align: center;
             transition: background 0.2s;
-            position: relative;
         }
 
         .team-card:hover { background: var(--bg3); }
@@ -378,28 +442,22 @@
             font-weight: 900;
             color: var(--green);
             background: var(--bg3);
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s, background 0.3s;
         }
 
-        .team-card:hover .team-avatar {
-            border-color: var(--green);
-            box-shadow: var(--glow);
-        }
+        .team-card:hover .team-avatar { border-color: var(--green); box-shadow: var(--glow); }
 
         .team-card h3 {
             font-family: 'Orbitron', monospace;
             font-size: 0.7em;
             font-weight: 700;
-            color: #fff;
+            color: var(--text);
             letter-spacing: 1px;
             margin-bottom: 6px;
+            transition: color 0.3s;
         }
 
-        .team-card p {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.7em;
-            color: var(--text-dim);
-        }
+        .team-card p { font-family: 'Share Tech Mono', monospace; font-size: 0.7em; color: var(--text-dim); }
 
         /* ── FOOTER ── */
         footer {
@@ -408,45 +466,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: gap;
+            flex-wrap: wrap;
             gap: 16px;
+            transition: border-color 0.3s;
         }
 
-        .footer-logo {
-            font-family: 'Orbitron', monospace;
-            font-weight: 900;
-            color: var(--green);
-            font-size: 0.9em;
-            letter-spacing: 3px;
-        }
-
-        .footer-text {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.75em;
-            color: var(--text-dim);
-            text-align: right;
-        }
-
-        /* ── SCAN LINE ANIMATION ── */
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100vh); }
-        }
-
-        .scanline {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 2px;
-            background: linear-gradient(transparent, rgba(0,255,136,0.08), transparent);
-            animation: scan 8s linear infinite;
-            pointer-events: none;
-            z-index: 999;
-        }
+        .footer-logo { font-family: 'Orbitron', monospace; font-weight: 900; color: var(--green); font-size: 0.9em; letter-spacing: 3px; }
+        .footer-text { font-family: 'Share Tech Mono', monospace; font-size: 0.75em; color: var(--text-dim); text-align: right; }
 
         @media (max-width: 768px) {
             .stats-row { grid-template-columns: repeat(2, 1fr); }
             .arch-tag { display: none; }
             nav { flex-direction: column; gap: 16px; }
+            .nav-right { flex-wrap: wrap; justify-content: center; }
             footer { flex-direction: column; text-align: center; }
             .footer-text { text-align: center; }
         }
@@ -454,16 +486,22 @@
 </head>
 <body>
     <div class="scanline"></div>
-    <div class="noise"></div>
 
     <div class="wrap">
         <nav>
             <div class="logo">CYBER TITANS</div>
-            <div class="nav-links">
-                <a href="#features">FEATURES</a>
-                <a href="#architecture">ARCHITECTURE</a>
-                <a href="#team">TEAM</a>
-                <a href="dashboard.html">DASHBOARD</a>
+            <div class="nav-right">
+                <div class="nav-links">
+                    <a href="#features">FEATURES</a>
+                    <a href="#architecture">ARCHITECTURE</a>
+                    <a href="#team">TEAM</a>
+                    <a href="dashboard.html">DASHBOARD</a>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                    <span id="themeIcon">☀️</span>
+                    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+                    <span id="themeLabel">LIGHT</span>
+                </button>
             </div>
         </nav>
 
@@ -480,22 +518,10 @@
 
         <!-- STATS -->
         <div class="stats-row">
-            <div class="stat-cell">
-                <span class="num">85%+</span>
-                <span class="label">ACCURACY</span>
-            </div>
-            <div class="stat-cell">
-                <span class="num">&lt;100ms</span>
-                <span class="label">LATENCY</span>
-            </div>
-            <div class="stat-cell">
-                <span class="num">24h</span>
-                <span class="label">FORECAST RANGE</span>
-            </div>
-            <div class="stat-cell">
-                <span class="num">0.94</span>
-                <span class="label">R² SCORE</span>
-            </div>
+            <div class="stat-cell"><span class="num">85%+</span><span class="label">ACCURACY</span></div>
+            <div class="stat-cell"><span class="num">&lt;100ms</span><span class="label">LATENCY</span></div>
+            <div class="stat-cell"><span class="num">24h</span><span class="label">FORECAST RANGE</span></div>
+            <div class="stat-cell"><span class="num">0.94</span><span class="label">R² SCORE</span></div>
         </div>
 
         <!-- FEATURES -->
@@ -571,8 +597,8 @@
 <span class="comment"># 1. Install dependencies</span><br>
 <span class="prompt">$</span> <span class="cmd">pip install -r requirements.txt</span><br>
 <br>
-<span class="comment"># 2. Generate training data &amp; train model</span><br>
-<span class="prompt">$</span> <span class="cmd">python quick_start.py</span><br>
+<span class="comment"># 2. Seed database with traffic data</span><br>
+<span class="prompt">$</span> <span class="cmd">python setup.py</span><br>
 <br>
 <span class="comment"># 3. Start the API server</span><br>
 <span class="prompt">$</span> <span class="cmd">python api.py</span><br>
@@ -587,46 +613,37 @@
             <div class="section-title">// THE TEAM</div>
             <div class="section-heading">Cyber Titans — Kisii University</div>
             <div class="team-grid">
-                <div class="team-card">
-                    <div class="team-avatar">JN</div>
-                    <h3>JOB NYOLEI</h3>
-                    <p>IN17/00083/23</p>
-                </div>
-                <div class="team-card">
-                    <div class="team-avatar">JY</div>
-                    <h3>JUSTUS YONGO</h3>
-                    <p>IN17/00106/23</p>
-                </div>
-                <div class="team-card">
-                    <div class="team-avatar">WN</div>
-                    <h3>WYCLIFFE NZILU</h3>
-                    <p>IN17/00014/23</p>
-                </div>
-                <div class="team-card">
-                    <div class="team-avatar">SO</div>
-                    <h3>SAMMY OWAKA</h3>
-                    <p>IN17/00050/21</p>
-                </div>
-                <div class="team-card">
-                    <div class="team-avatar">SK</div>
-                    <h3>SOLOMON KAMAU</h3>
-                    <p>IN17/00036/23</p>
-                </div>
-                <div class="team-card">
-                    <div class="team-avatar">BT</div>
-                    <h3>BENSON THANG'WA</h3>
-                    <p>IN17/00009/23</p>
-                </div>
+                <div class="team-card"><div class="team-avatar">JN</div><h3>JOB NYOLEI</h3><p>IN17/00083/23</p></div>
+                <div class="team-card"><div class="team-avatar">JY</div><h3>JUSTUS YONGO</h3><p>IN17/00106/23</p></div>
+                <div class="team-card"><div class="team-avatar">WN</div><h3>WYCLIFFE NZILU</h3><p>IN17/00014/23</p></div>
+                <div class="team-card"><div class="team-avatar">SO</div><h3>SAMMY OWAKA</h3><p>IN17/00050/21</p></div>
+                <div class="team-card"><div class="team-avatar">SK</div><h3>SOLOMON KAMAU</h3><p>IN17/00036/23</p></div>
+                <div class="team-card"><div class="team-avatar">BT</div><h3>BENSON THANG'WA</h3><p>IN17/00009/23</p></div>
             </div>
         </section>
 
         <footer>
             <div class="footer-logo">CYBER TITANS</div>
-            <div class="footer-text">
-                © 2026 Kisii University<br>
-                Traffic Congestion Prediction System
-            </div>
+            <div class="footer-text">© 2026 Kisii University<br>Traffic Congestion Prediction System</div>
         </footer>
     </div>
+
+    <script>
+        // Persist theme across pages
+        const saved = localStorage.getItem('ct-theme') || 'dark';
+        setTheme(saved);
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('ct-theme', theme);
+            document.getElementById('themeIcon').textContent = theme === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeLabel').textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            setTheme(current === 'dark' ? 'light' : 'dark');
+        }
+    </script>
 </body>
 </html>
