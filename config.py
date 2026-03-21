@@ -23,6 +23,20 @@ class Config:
     TEST_SPLIT = 0.15
     LEARNING_RATE = 0.001
     
+    # Kenyan Roads
+    ROADS = [
+        'Mombasa Road',
+        'Thika Road',
+        'Kisii-Nairobi Road',
+        'Waiyaki Way',
+        'Ngong Road',
+        'Langata Road',
+        'Jogoo Road',
+        'Uhuru Highway',
+        'Outer Ring Road',
+        'Eastern Bypass',
+    ]
+
     # Data parameters
     FEATURES = ['vehicle_count', 'hour', 'day_of_week', 'is_weekend', 
                 'is_rush_hour', 'weather_condition']
