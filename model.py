@@ -34,6 +34,7 @@ class TrafficPredictionModel:
         self.history = None
         self.db = TrafficDatabase()
         self.model_version = f"v{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+        self._train_features = None  # features used during training
         Config.create_directories()
 
     def prepare_data(self, df, features=None):
@@ -59,6 +60,7 @@ class TrafficPredictionModel:
         features = [f for f in features if f in df_processed.columns]
         data = df_processed[features].fillna(0).values
         scaled_data = self.scaler.fit_transform(data)
+        self._train_features = features  # remember for predict_future
         return scaled_data, features
 
     def create_sequences(self, data, target_col=0):
@@ -126,7 +128,45 @@ class TrafficPredictionModel:
 
     def predict_future(self, recent_data, hours_ahead=6):
         """Predict traffic for the next N hours."""
-        scaled_data, _ = self.prepare_data(recent_data)
+        df = recent_data.copy()
+
+        # Rebuild any missing feature columns from timestamp
+        if 'hour' not in df.columns and 'timestamp' in df.columns:
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            df['hour'] = df['timestamp'].dt.hour
+            df['day_of_week'] = df['timestamp'].dt.dayofweek
+            df['is_weekend'] = (df['day_of_week'] >= 5).astype(int)
+            df['is_rush_hour'] = df['hour'].apply(
+                lambda h: int((7 <= h <= 9) or (17 <= h <= 19)))
+
+        # Use the same features the model was trained on
+        features = self._train_features or ['vehicle_count', 'hour',
+                                             'day_of_week', 'is_weekend', 'is_rush_hour']
+
+        # Handle weather encoding
+        if 'weather_encoded' in features:
+            if 'weather_condition' in df.columns and 'weather_condition' in self.label_encoders:
+                known = set(self.label_encoders['weather_condition'].classes_)
+                df['weather_condition'] = df['weather_condition'].apply(
+                    lambda x: x if x in known else 'Clear')
+                df['weather_encoded'] = self.label_encoders['weather_condition'].transform(
+                    df['weather_condition'].fillna('Clear'))
+            else:
+                df['weather_encoded'] = 0
+
+        # Add any still-missing columns as zeros
+        for col in features:
+            if col not in df.columns:
+                df[col] = 0
+
+        data = df[features].fillna(0).values
+
+        # Use transform (not fit_transform) to keep same scale as training
+        try:
+            scaled_data = self.scaler.transform(data)
+        except Exception:
+            # Fallback: refit if scaler shape mismatch
+            scaled_data = self.scaler.fit_transform(data)
 
         if len(scaled_data) < self.sequence_length:
             raise ValueError(f"Need at least {self.sequence_length} records")
@@ -141,10 +181,11 @@ class TrafficPredictionModel:
             current_seq = np.roll(current_seq, -1, axis=0)
             current_seq[-1, 0] = pred
 
-        # Inverse transform
-        dummy = np.zeros((len(predictions), scaled_data.shape[1]))
-        dummy[:, 0] = predictions
-        return self.scaler.inverse_transform(dummy)[:, 0]
+        # Inverse transform only the vehicle_count column (col 0)
+        data_min = self.scaler.data_min_[0]
+        data_max = self.scaler.data_max_[0]
+        result = np.array(predictions) * (data_max - data_min) + data_min
+        return result
 
     def save_model(self, filepath=None):
         """Save model and scaler."""
@@ -156,6 +197,7 @@ class TrafficPredictionModel:
         joblib.dump(self.model, filepath)
         joblib.dump(self.scaler, filepath.replace('.pkl', '_scaler.pkl'))
         joblib.dump(self.label_encoders, filepath.replace('.pkl', '_encoders.pkl'))
+        joblib.dump(self._train_features, filepath.replace('.pkl', '_features.pkl'))
         print(f"Model saved to: {filepath}")
 
     def load_model(self, filepath):
